@@ -1,2 +1,2 @@
-# Bingo-m-ng
+# Bingo-mäng
 Mingi paganama koduse ülesande jaoks noh.
