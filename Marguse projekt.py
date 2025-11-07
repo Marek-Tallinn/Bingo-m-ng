@@ -1,5 +1,6 @@
 import random
 import time
+import sys
 
 sümbolid = ['🍒', '🍋', '🍉', '𝟕']
 
@@ -9,14 +10,16 @@ keerude_arv = 0 #testimise jaoks
 
 #kuvab rulle aeglaselt
 def aeglane_rull():
-    rull_1 = random.choice(sümbolid)
-    rull_2 = random.choice(sümbolid)
-    rull_3 = random.choice(sümbolid)
-    rull_4 = random.choice(sümbolid)
-    print('Rullimine...\n')
-    time.sleep(0.67)
-    print(f"[ {rull_1}  |  {rull_2}  |  {rull_3}  |  {rull_4}  ]\n")
-    return rull_1, rull_2, rull_3, rull_4
+    rullid = [' ', ' ', ' ', ' ']       # Algselt tühjad
+    for i in range(10):     # Mitu korda rullid keerlevad
+        for j in range(4):
+            rullid[j] = random.choice(sümbolid)
+        sys.stdout.write('\r' + ' | '.join(rullid) + '  ')
+        sys.stdout.flush()
+        time.sleep(0.2)     # Vahetamise kiirus
+    print()
+    time.sleep(1.2)
+    return tuple(rullid)
 
 #mäng ise
 def mäng():
@@ -45,7 +48,7 @@ def mäng():
         r1, r2, r3, r4 = aeglane_rull()
         keerude_arv += 1        # Keerutamise loendur
 
-        if r1 == r2 == r3 == r4:        # Võidu kontroll
+        if r1 == r2 == r3 == r4:        # JACKPOT
             võit = panus * 10
             pank += võit
             print(f'🎉 JACKPOT 🎉\nVõitsid {võit}€.')
