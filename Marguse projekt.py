@@ -1,6 +1,9 @@
 import random
 import time
 import sys
+from operator import itemgetter
+
+leaderboard_fail = "leaderboard.txt"
 
 sümbolid = ['🍒', '🍋', '🍉', '𝟕']
 
@@ -76,10 +79,33 @@ def mäng():
     # Lõppstatistika
     print('\n=== MÄNGU STATISTIKA ===')
     print(f'Keerutasid kokku {keerude_arv} korda.')
-    print(f'Kogukaotus: {kokku_kaotatud}€')
+    print(f'Kogukaotus: -{kokku_kaotatud}€')
     print(f'Koguvõit: {kokku_võidetud}€')
     print(f'Lõppsaldo: {pank}€')
     print("Sümbolite sagedus mängu jooksul:")
     for sümbol, arv in sümbolite_loendur.items():
         print(f'{sümbol}: {arv} korda')
+
+def salvesta_edetabel(nimi, lõppsaldo):
+    try:
+        with open(leaderboard_fail, "r", encoding="utf-8") as f:        # Loeb olemasolevat tabelit
+            read_data = f.readlines()
+        tulemused = []
+        for rida in read_data:
+            osa = rida.strip().split(",")
+            if len(osa) == 2:
+                tulemused.append([osa[0], int(osa[1])])
+    except FileNotFoundError:
+        tulemused = []
+    
+
+    tulemused.append([nimi, lõppsaldo])      # Lisab uue tulemuse
+
+    # Sorteerib tulemused suurima saldo järgi
+    tulemused = sorted(tulemused, key=itemgetter(1), reverse=True)
+
+    with open(leaderboard_fail, "w", encoding="utf-8") as f:
+        for nimi, saldo in tulemused[:10]:
+            f.write(f"{nimi}, {saldo}\n")
+
 mäng()
