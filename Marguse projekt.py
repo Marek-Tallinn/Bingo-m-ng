@@ -35,6 +35,7 @@ def aeglane_rull():
         sys.stdout.write('\r' + ' | '.join(rullid))
         sys.stdout.flush()
         time.sleep(0.2)
+    time.sleep(0.5)
     print('\n')
     for sümbol in lõpuseis:
         sümbolite_loendur[sümbol] += 1
@@ -42,10 +43,8 @@ def aeglane_rull():
 
 # Edetabeli salvestamine (3 päeva säilitamist)
 def salvesta_edetabel(nimi, lõppsaldo):
-
     algne_saldo = 250
     mängija_võitis = lõppsaldo - algne_saldo
-
     if mängija_võitis <= 0:
         return
     
@@ -65,23 +64,25 @@ def salvesta_edetabel(nimi, lõppsaldo):
         nimed_failis = set()
         for rida in read_data:
             osa = rida.strip().split(",")
-            if len(osa) == 2:
+            if len(osa) == 3:
                 nimi_exist = osa[0].strip()
                 võit_exist = int(osa[1].replace('€', '').strip())
-                tulemused.append([nimi_exist, võit_exist])
+                kuup = osa[2].strip()
+                tulemused.append([nimi_exist, võit_exist, kuup])
                 nimed_failis.add(nimi_exist)
     except FileNotFoundError:
         tulemused = []
         nimed_failis = set()
     
+    kuup_now = datetime.now().strftime("%m/%d %H:%M")
     if nimi not in nimed_failis:
-        tulemused.append([nimi, mängija_võitis])
+        tulemused.append([nimi, mängija_võitis, kuup_now])
 
     tulemused = sorted(tulemused, key=itemgetter(1), reverse=True)
 
     with open(leaderboard_fail, "w", encoding="utf-8") as f:
-        for nimi_, võit in tulemused[:10]:
-            f.write(f"{nimi_}, {võit}€\n")
+        for nimi_, võit, kuup_now in tulemused[:10]:
+            f.write(f"{nimi_}, {võit}€, {kuup_now}\n")
 
 # Edetabeli kuvamine
 def kuva_statistika_ja_edetabel():
