@@ -67,7 +67,7 @@ def salvesta_edetabel(nimi, lõppsaldo):
             osa = rida.strip().split(",")
             if len(osa) == 2:
                 nimi_exist = osa[0].strip()
-                võit_exist = int(osa[1].replace('€', '').strip(1))
+                võit_exist = int(osa[1].replace('€', '').strip())
                 tulemused.append([nimi_exist, võit_exist])
                 nimed_failis.add(nimi_exist)
     except FileNotFoundError:
@@ -87,16 +87,16 @@ def salvesta_edetabel(nimi, lõppsaldo):
 def kuva_statistika_ja_edetabel():
     kogusaldo = pank - 250
     print("\n=== MÄNGU STATISTIKA ===")
-    print(f"Keerutasid kokku {keerude_arv} korda.")
-    print(f"Kogukaotus: -{kokku_kaotatud}€")
-    print(f"Koguvõit: {kokku_võidetud}€")
-    if kogusaldo >= 0:
-        print(f"Kogusaldo: {kogusaldo}€")
+    print(f"{'Keerutusi kokku:':<15} {keerude_arv}")
+    if kogusaldo > 0:
+        print(f"{'Kogukasum:':15} {kogusaldo}€ 🎉")
+    elif kogusaldo < 0:
+        print(f"{'Kogukaotus:'} {kogusaldo}€ 😢")
     else:
-        print(f"Kogusaldo: {kogusaldo}€")
-    print("Sümbolite sagedus mängu jooksul:")
+        print(f"{'Ei kaotanud ega teeninud':25}")
+    print("\nSümbolite sagedus mängu jooksul:")
     for sümbol, arv in sümbolite_loendur.items():
-        print(f"{sümbol}: {arv} korda")
+        print(f"{sümbol} : {arv}")
 
     
     print("\n=== EDETABEL (TOP 5)===")
@@ -137,8 +137,9 @@ def mäng():
 
         if panus > pank:
             print("Sa oled liiga vaene selle panuse jaoks.")
-        elif panus < 0:
-            print("Sisesta positiivne täisarv...")
+            continue
+        elif panus < 1:
+            print("Panus peab olema vähemalt 1€.")
             continue
 
         pank -= panus
